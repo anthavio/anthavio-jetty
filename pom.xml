@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.anthavio.maven</groupId>
+		<artifactId>anthavio-super-pom</artifactId>
+		<version>1-SNAPSHOT</version>
+	</parent>
+	
+	<groupId>com.anthavio</groupId>
+	<artifactId>anthavio-jetty</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
+	<name>anthavio-jetty</name>
+	
+	<description>Jetty Server Embedder</description>
+	
+	<properties>
+		<jetty6.version>6.1.26</jetty6.version>
+	<!--
+		<jetty.version>7.6.9.v20130131</jetty.version>
+	-->
+		<jetty.version>8.1.9.v20130131</jetty.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>${jetty6.version}</version>
+			<scope>provided</scope>
+			<!-- clashes with signed jetty8 servlet 3.0 api jar -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+  				<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- Jetty6ClassRunner -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- com.anthavio.jetty.spring.Jetty6Loader -->
+		<dependency>
+			<groupId>com.anthavio</groupId>
+			<artifactId>anthavio-spring</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.1.0.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>3.1.0.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- com.anthavio.jetty.spring.SpringContextDeployer -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>3.1.0.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-plus</artifactId>
+			<version>${jetty.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- AJC needs this -->
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- test -->
+		
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.easytesting</groupId>
+			<artifactId>fest-assert-core</artifactId>
+			<version>2.0M8</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.9</version>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+
+
+	<build>
+		<pluginManagement>
+			<plugins>
+			
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<configuration>
+						<!-- release:perform add sources&javadoc -->
+						<useReleaseProfile>true</useReleaseProfile>
+					</configuration>
+				</plugin>
+
+				</plugins>
+		</pluginManagement>
+
+	</build>
+	
+</project>
