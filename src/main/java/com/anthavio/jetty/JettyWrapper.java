@@ -228,13 +228,13 @@ public class JettyWrapper implements JettyServerWrapper {
 			throw new IllegalStateException("Cannot find port. No connector is configured for server");
 		}
 		//use port of the first connector
-		int port = connectors[0].getPort();
+		int port = connectors[0].getLocalPort();
 
 		//warn if more is found
 		if (connectors.length > 1) {
 			List<Integer> ports = new LinkedList<Integer>();
 			for (Connector connector : connectors) {
-				ports.add(connector.getPort());
+				ports.add(connector.getLocalPort());
 			}
 			log.info("Multile connectors configured. Ports " + ports);
 		}
