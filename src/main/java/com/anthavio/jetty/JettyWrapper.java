@@ -109,7 +109,6 @@ public class JettyWrapper implements JettyServerWrapper {
 			}
 		}
 
-		properties.put("jetty.port", System.getProperty("jetty.port"));
 		if (port >= 0) {
 			//override jetty.xml connector port
 			//System.setProperty("jetty.port", String.valueOf(port));
