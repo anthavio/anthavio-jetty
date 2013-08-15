@@ -1,6 +1,7 @@
 package com.anthavio.jetty;
 
 /**
+ * Common interface for ServerWrappers
  * 
  * @author martin.vanek
  *

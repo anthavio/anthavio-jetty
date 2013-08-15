@@ -7,16 +7,16 @@ import org.apache.commons.lang.UnhandledException;
 
 import com.anthavio.jetty.Jetty6Wrapper;
 import com.anthavio.jetty.spring.Jetty6Loader;
+import com.anthavio.jetty.test.InstanceManagerBase.ServerSetupData;
 import com.anthavio.jetty.test.Jetty6InstanceManager;
 import com.anthavio.jetty.test.JettyConfig;
-import com.anthavio.jetty.test.InstanceManagerBase.ServerSetupData;
 
 /**
+ * Subclass to archieve similar to @RunWith(Jetty6ClassRunner.class)
  * 
  * @author martin.vanek
  *
  */
-//@RunWith(Jetty6ClassRunner.class)
 public abstract class Jetty6JunitTest {
 
 	private Jetty6InstanceManager manager = Jetty6InstanceManager.i();

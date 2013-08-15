@@ -3,10 +3,12 @@
  */
 package com.anthavio.jetty.spring;
 
-import com.anthavio.jetty.test.JettyInstanceManager;
 import com.anthavio.jetty.test.InstanceManagerBase;
+import com.anthavio.jetty.test.JettyInstanceManager;
 
 /**
+ * @ContextConfiguration(loader = JettyLoader.class, locations = "example-child-context")
+ * 
  * 
  * @author vanek
  *

@@ -1,5 +1,11 @@
 package com.anthavio.jetty;
 
+/**
+ * Jetty 6 main class
+ * 
+ * @author martin.vanek
+ *
+ */
 public class TestJetty6Starter {
 
 	public static void main(String[] args) {

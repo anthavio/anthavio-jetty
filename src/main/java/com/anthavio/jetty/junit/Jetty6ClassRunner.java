@@ -17,7 +17,7 @@ import com.anthavio.jetty.test.JettyConfig;
  * @JettyConfig(port = 0)
  * public class MyFunkyTest { ...
  * 
- * Similar can be done with @BeforeClass and @AfterClass annotations, but this is more convinient
+ * Similar can be done with @BeforeClass and @AfterClass annotations, but this is more convenient
  * 
  * @author martin.vanek
  *
@@ -31,6 +31,7 @@ public class Jetty6ClassRunner extends BlockJUnit4ClassRunner {
 	public Jetty6ClassRunner(Class<?> testClass) throws InitializationError {
 		super(testClass);
 		JettyConfig[] configs = Jetty6Loader.getJettyConfigs(testClass);
+		jettys = new ServerSetupData[configs.length];
 		for (int i = 0; i < configs.length; ++i) {
 			JettyConfig config = configs[i];
 			jettys[i] = new ServerSetupData(config.home(), config.port(), config.configs(), config.cache());
@@ -48,8 +49,22 @@ public class Jetty6ClassRunner extends BlockJUnit4ClassRunner {
 	@Override
 	protected Statement withBeforeClasses(Statement statement) {
 		for (int i = 0; i < jettys.length; ++i) {
-			manager.startServer(jettys[i]);
+			Jetty6Wrapper jetty = manager.startServer(jettys[i]);
 		}
+		//TODO set port to test field
+		/*
+		List<FrameworkField> list = getTestClass().getAnnotatedFields(JettyPort.class);
+		for (FrameworkField field : list) {
+			if (field.getField().getType() == int.class) {
+				field.getField().setInt(field, 0);
+			} else if (field.getField().getType() == Integer.class) {
+
+			} else {
+				throw new IllegalStateException("JettyPort annotated field must be of int or integer type");
+			}
+			
+		}
+		*/
 		return super.withBeforeClasses(statement);
 	}
 

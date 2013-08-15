@@ -225,7 +225,7 @@ public class Jetty6Wrapper implements JettyServerWrapper {
 			throw new IllegalStateException("Jetty configuration failed", x);
 		}
 		if (server == null) {
-			throw new IllegalStateException("Jetty instance not found");
+			throw new IllegalStateException("Jetty instance not found in configuration");
 		}
 		return server;
 	}
