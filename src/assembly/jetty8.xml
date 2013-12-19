@@ -12,7 +12,7 @@
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
 			<includes>
-				<include>com.anthavio.example:*</include>
+				<include>net.anthavio.example:*</include>
 			</includes>
 			<excludes>
 				<exclude>*:war:*</exclude>
@@ -21,7 +21,7 @@
 		<dependencySet>
 			<outputDirectory>lib/ext</outputDirectory>
 			<excludes>
-				<exclude>com.anthavio.example:*</exclude>
+				<exclude>net.anthavio.example:*</exclude>
 				<exclude>*:war:*</exclude>
 			</excludes>
 		</dependencySet>

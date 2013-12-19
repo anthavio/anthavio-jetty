@@ -10,7 +10,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="com.nature">
+	<logger name="net.anthavio">
 		<level value="debug"/>
 	</logger>
 	
