@@ -40,6 +40,9 @@ public class JettyWebAppDeployer extends org.eclipse.jetty.webapp.WebAppContext 
 
 	}
 
+	/**
+	 * Better named alternative for setResourceBase/setBaseResource duo... but does the same
+	 */
 	public void setWebAppDir(String path) {
 		setResourceBase(path);
 	}
