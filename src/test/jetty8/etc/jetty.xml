@@ -66,27 +66,20 @@
       </New>
     </Set>
     
-    <New class="net.anthavio.jetty.JettyWebAppDeployer">
-			<Arg><Ref id="Contexts"/></Arg>
-			<Set name="contextPath">/</Set>
-			<Set name="baseResource">
-				<New class="org.eclipse.jetty.util.resource.ResourceCollection">
-					<Arg>
-						<Array type="java.lang.String">
-							<Item><Property name="jetty.home" default="."/>/../webapp</Item>
-						</Array>
-					</Arg>
-				</New>
-			</Set>
-			<Set name="defaultsDescriptor"><Property name="jetty.home" default="."/>/etc/webdefault.xml</Set>
-			<!--
-			<Set name="configurationClasses"><Ref id="PlusConfig" /></Set>
-			-->
-			<Call name="setAttribute">
-				<Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
-				<Arg>.*/.*\.jar$</Arg>
-			</Call>
-		</New>
+	<New class="net.anthavio.jetty.JettyWebAppDeployer">
+		<Arg><Ref id="Contexts"/></Arg>
+		<Set name="contextPath">/</Set>
+		<Set name="webAppDir"><Property name="jetty.home" default="."/>/../webapp</Set>
+		
+		<Set name="defaultsDescriptor"><Property name="jetty.home" default="."/>/etc/webdefault.xml</Set>
+		<!--
+		<Set name="configurationClasses"><Ref id="PlusConfig" /></Set>
+		-->
+		<Call name="setAttribute">
+			<Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
+			<Arg>.*/.*\.jar$</Arg>
+		</Call>
+	</New>
 
     <!-- =========================================================== -->
     <!-- extra options                                               -->

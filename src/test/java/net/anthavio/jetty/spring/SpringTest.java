@@ -1,12 +1,10 @@
 package net.anthavio.jetty.spring;
 
-import net.anthavio.jetty.spring.JettyLoader;
 import net.anthavio.jetty.test.JettyConfig;
 
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
-
 
 /**
  * 
@@ -19,6 +17,6 @@ public class SpringTest extends AbstractTestNGSpringContextTests {
 
 	@Test
 	public void test() {
-		System.out.println("cxxxxxxxxxxxxxx");
+		//System.out.println("cxxxxxxxxxxxxxx");
 	}
 }

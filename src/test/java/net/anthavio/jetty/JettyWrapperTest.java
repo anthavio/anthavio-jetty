@@ -7,9 +7,6 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
-import net.anthavio.jetty.Jetty6Wrapper;
-import net.anthavio.jetty.JettyWrapper;
-
 import org.testng.annotations.Test;
 
 /**

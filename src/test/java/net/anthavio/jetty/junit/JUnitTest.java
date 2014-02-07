@@ -1,12 +1,9 @@
 package net.anthavio.jetty.junit;
 
-import net.anthavio.jetty.junit.Jetty6ClassRunner;
-import net.anthavio.jetty.junit.JettyPort;
 import net.anthavio.jetty.test.JettyConfig;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 
 /**
  * 
@@ -25,7 +22,7 @@ public class JUnitTest {
 
 	@Test
 	public void test() {
-		System.out.println("xxxxxxxxxxxxxyyyyy");
+		//System.out.println("xxxxxxxxxxxxxyyyyy");
 	}
 
 }

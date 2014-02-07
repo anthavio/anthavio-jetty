@@ -27,11 +27,11 @@ import org.eclipse.jetty.xml.XmlConfiguration;
  */
 public class JettyWrapper implements JettyServerWrapper {
 
-	private static final Logger log = Log.getLogger(JettyWrapper.class);
+	protected static final Logger log = Log.getLogger(JettyWrapper.class);
 
-	private static final String DEFAULT_JETTY_HOME = System.getProperty("user.dir");
+	public static final String DEFAULT_JETTY_HOME = System.getProperty("user.dir");
 
-	private static final String DEFAULT_JETTY_CFG = "/etc/jetty.xml";
+	public static final String DEFAULT_JETTY_CFG = "/etc/jetty.xml";
 
 	private final String jettyHome;
 
@@ -139,7 +139,7 @@ public class JettyWrapper implements JettyServerWrapper {
 	}
 
 	public int getPort() {
-		return findPort(this.server);
+		return getLocalPort(this.server);
 	}
 
 	public boolean isStarted() {
@@ -222,7 +222,7 @@ public class JettyWrapper implements JettyServerWrapper {
 		return server;
 	}
 
-	private int findPort(Server server) {
+	protected int getLocalPort(Server server) {
 		Connector[] connectors = server.getConnectors();
 		if (connectors == null || connectors.length == 0) {
 			throw new IllegalStateException("Cannot find port. No connector is configured for server");

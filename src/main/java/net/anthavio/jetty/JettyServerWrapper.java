@@ -13,4 +13,6 @@ public interface JettyServerWrapper {
 	public void stop();
 
 	public boolean isStarted();
+
+	public int getPort();
 }
