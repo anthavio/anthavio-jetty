@@ -7,6 +7,7 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
+import org.fest.assertions.api.Assertions;
 import org.testng.annotations.Test;
 
 /**
@@ -20,6 +21,7 @@ public class JettyWrapperTest {
 	public void testJettyWrapper() throws Exception {
 		JettyWrapper jetty = new JettyWrapper("src/test/jetty8", 0); //dynamic port allocation
 		jetty.start();
+		Assertions.assertThat(jetty.getPort()).isGreaterThan(0);
 
 		URL url = new URL("http://localhost:" + jetty.getPort() + "/halleluyah.html");
 		InputStream stream = (InputStream) url.getContent();
@@ -33,6 +35,7 @@ public class JettyWrapperTest {
 	public void testJetty6Wrapper() throws Exception {
 		Jetty6Wrapper jetty = new Jetty6Wrapper("src/test/jetty6", 0); //dynamic port allocation
 		jetty.start();
+		Assertions.assertThat(jetty.getPort()).isGreaterThan(0);
 
 		URL url = new URL("http://localhost:" + jetty.getPort() + "/halleluyah.html");
 		InputStream stream = (InputStream) url.getContent();

@@ -1,6 +1,6 @@
 package net.anthavio.jetty;
 
-import net.anthavio.jetty.JettyWrapper;
+import org.fest.assertions.api.Assertions;
 
 /**
  * Jetty 8 main class
@@ -11,9 +11,9 @@ import net.anthavio.jetty.JettyWrapper;
 public class TestJettyStarter {
 
 	public static void main(String[] args) {
-		System.setProperty("jetty.port", "13131");
-		JettyWrapper wrapper = new JettyWrapper("src/test/jetty8", "jetty.xml", "jetty-deploy.xml", "jetty-contexts.xml");
+		JettyWrapper wrapper = new JettyWrapper("src/test/jetty9", 0);
 		wrapper.start();
-		//wrapper.stop();
+		Assertions.assertThat(wrapper.getPort()).isNotEqualTo(8080);
+		wrapper.stop();
 	}
 }

@@ -1,6 +1,6 @@
 package net.anthavio.jetty;
 
-import net.anthavio.jetty.Jetty6Wrapper;
+import org.fest.assertions.api.Assertions;
 
 /**
  * Jetty 6 main class
@@ -11,9 +11,9 @@ import net.anthavio.jetty.Jetty6Wrapper;
 public class TestJetty6Starter {
 
 	public static void main(String[] args) {
-		System.setProperty("jetty.port", "13131");
 		Jetty6Wrapper wrapper = new Jetty6Wrapper("src/test/jetty6");
 		wrapper.start();
-		//wrapper.stop();
+		Assertions.assertThat(wrapper.getPort()).isEqualTo(8080);
+		wrapper.stop();
 	}
 }

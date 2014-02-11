@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.anthavio.jetty.JettyServerWrapper;
+import net.anthavio.jetty.ServerWrapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * 
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * @author martin.vanek
  *
  */
-public abstract class InstanceManagerBase<T extends JettyServerWrapper> {
+public abstract class InstanceManagerBase<T extends ServerWrapper> {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -97,6 +96,9 @@ public abstract class InstanceManagerBase<T extends JettyServerWrapper> {
 	 * Return instance
 	 */
 	public T getServer(ServerSetupData setup) {
+		if (setup == null) {
+			throw new IllegalArgumentException("Null setup data!!!");
+		}
 		return cache.get(setup);
 	}
 

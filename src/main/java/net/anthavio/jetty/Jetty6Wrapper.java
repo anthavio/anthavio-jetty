@@ -2,8 +2,6 @@ package net.anthavio.jetty;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 
 import org.mortbay.jetty.Connector;
@@ -22,7 +20,7 @@ import org.mortbay.xml.XmlConfiguration;
  * @author martin.vanek
  *
  */
-public class Jetty6Wrapper implements JettyServerWrapper {
+public class Jetty6Wrapper implements ServerWrapper {
 
 	private static final String DEFAULT_JETTY_HOME = System.getProperty("user.dir");
 
@@ -137,7 +135,22 @@ public class Jetty6Wrapper implements JettyServerWrapper {
 	}
 
 	public int getPort() {
-		return findPort(this.server);
+		int[] ports = getLocalPorts(this.server);
+		if (ports.length > 1) {
+			Log.warn("Multiple ports found " + Arrays.asList(ports));
+		}
+		return ports[0];
+	}
+
+	public int[] getLocalPorts() {
+		if (!isStarted()) {
+			throw new IllegalStateException("Start Server first");
+		}
+		int[] ports = getLocalPorts(server);
+		if (ports == null || ports.length == 0) {
+			throw new IllegalStateException("Cannot find port. No Connector is configured for Server");
+		}
+		return ports;
 	}
 
 	public boolean isStarted() {
@@ -230,24 +243,18 @@ public class Jetty6Wrapper implements JettyServerWrapper {
 		return server;
 	}
 
-	private int findPort(Server server) {
+	private int[] getLocalPorts(Server server) {
 		Connector[] connectors = server.getConnectors();
 		if (connectors == null || connectors.length == 0) {
 			throw new IllegalStateException("Cannot find port. No connector is configured for server");
 		}
-		//use port of the first connector
-		int port = connectors[0].getLocalPort();
 
-		//warn if more is found
-		if (connectors.length > 1) {
-			List<Integer> ports = new LinkedList<Integer>();
-			ports.add(port);
-			for (Connector connector : connectors) {
-				ports.add(connector.getLocalPort());
-			}
-			Log.info("Multile connectors configured. Ports " + ports);
+		int[] ports = new int[connectors.length];
+		for (int i = 0; i < connectors.length; ++i) {
+			Connector connector = connectors[i];
+			ports[i] = connector.getLocalPort();
 		}
-		return port;
+		return ports;
 	}
 
 	/**

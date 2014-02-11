@@ -6,7 +6,7 @@ package net.anthavio.jetty;
  * @author martin.vanek
  *
  */
-public interface JettyServerWrapper {
+public interface ServerWrapper {
 
 	public void start();
 
@@ -14,5 +14,6 @@ public interface JettyServerWrapper {
 
 	public boolean isStarted();
 
-	public int getPort();
+	public int[] getLocalPorts();
+
 }

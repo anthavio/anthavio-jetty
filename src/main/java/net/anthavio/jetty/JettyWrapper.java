@@ -1,9 +1,10 @@
 package net.anthavio.jetty;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,14 +19,14 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
 
 /**
- * Works with Jetty version 7 and 8
+ * Works with Jetty version 7, 8, 9
  * 
  * Be aware that those Jetty versions do NOT use System properties (jetty.home, jetty.port, ...) anymore.
  * 
  * @author vanek
  * 
  */
-public class JettyWrapper implements JettyServerWrapper {
+public class JettyWrapper implements ServerWrapper {
 
 	protected static final Logger log = Log.getLogger(JettyWrapper.class);
 
@@ -138,8 +139,23 @@ public class JettyWrapper implements JettyServerWrapper {
 		return server;
 	}
 
+	public int[] getLocalPorts() {
+		if (!isStarted()) {
+			throw new IllegalStateException("Start Server first");
+		}
+		int[] ports = getLocalPorts(this.server);
+		if (ports == null || ports.length == 0) {
+			throw new IllegalStateException("Cannot find port. No Connector is configured for Server");
+		}
+		return ports;
+	}
+
 	public int getPort() {
-		return getLocalPort(this.server);
+		int[] ports = getLocalPorts();
+		if (ports.length > 1) {
+			log.warn("Multiple ports found " + Arrays.asList(ports));
+		}
+		return ports[0];
 	}
 
 	public boolean isStarted() {
@@ -222,25 +238,92 @@ public class JettyWrapper implements JettyServerWrapper {
 		return server;
 	}
 
-	protected int getLocalPort(Server server) {
-		Connector[] connectors = server.getConnectors();
-		if (connectors == null || connectors.length == 0) {
-			throw new IllegalStateException("Cannot find port. No connector is configured for server");
+	/**
+	 * Issue here is getLocalPort() method was moved in Jetty 9 
+	 * 
+	 * Jetty 7 an 8 has it on org.eclipse.jetty.server.Connector interface
+	 * Jetty 9 has redesigned Connector hierarchy and method is now on new org.eclipse.jetty.server.NetworkConnector interface
+	 */
+	protected int[] getLocalPorts(Server server) {
+		Class<?> cConnector;
+		Method mGetLocalPort;
+		boolean jetty9;
+		try {
+			cConnector = Class.forName("org.eclipse.jetty.server.NetworkConnector");
+			jetty9 = true;
+		} catch (ClassNotFoundException cnx) {
+			cConnector = Connector.class; //jetty 8
+			jetty9 = false;
 		}
-		//use port of the first connector
-		int port = connectors[0].getLocalPort();
+		try {
+			mGetLocalPort = cConnector.getMethod("getLocalPort");
+		} catch (Exception x) {
+			throw new RuntimeException("Cannot find getLocalPort() method on " + cConnector);
+		}
 
-		//warn if more is found
-		if (connectors.length > 1) {
-			List<Integer> ports = new LinkedList<Integer>();
-			for (Connector connector : connectors) {
-				ports.add(connector.getLocalPort());
-			}
-			log.info("Multile connectors configured. Ports " + ports);
+		Connector[] connectors;
+		if (jetty9) {
+			connectors = getNetworkConnectors(server, cConnector);
+		} else {
+			connectors = server.getConnectors();
 		}
-		return port;
+
+		int[] ports = new int[connectors.length];
+		for (int i = 0; i < connectors.length; ++i) {
+			Connector connector = connectors[i];
+			ports[i] = getLocalPort(connector, mGetLocalPort);
+		}
+		return ports;
 	}
 
+	private int getLocalPort(Connector connector, Method mGetLocalPort) {
+		try {
+			return (Integer) mGetLocalPort.invoke(connector);
+		} catch (Exception x) {
+			throw new RuntimeException("getLocalPort() invocation failed on " + connector, x);
+		}
+	}
+
+	/**
+	 * Jetty9 NetworkConnector hierarchy 
+	 * http://download.eclipse.org/jetty/stable-9/apidocs/org/eclipse/jetty/server/NetworkConnector.html 
+	 */
+	private Connector[] getNetworkConnectors(Server server, Class<?> connectorClass) {
+		Connector[] connectors = server.getConnectors();
+		if (connectors == null || connectors.length == 0) {
+			throw new IllegalStateException("Cannot find port. No Connector is configured for server");
+		}
+		List<Connector> nconnectors = new ArrayList<Connector>();
+		for (Connector connector : connectors) {
+			System.out.println(connector + " " + connector.getClass());
+			//if(connector  instanceof NetworkConnector)
+			if (connectorClass.isAssignableFrom(connector.getClass())) {
+				nconnectors.add(connector);
+			}
+		}
+		return nconnectors.toArray(new Connector[nconnectors.size()]);
+	}
+
+	/*
+		protected int getLocalPort(Server server) {
+			Connector[] connectors = server.getConnectors();
+			if (connectors == null || connectors.length == 0) {
+				throw new IllegalStateException("Cannot find port. No connector is configured for server");
+			}
+			//use port of the first connector
+			int port = connectors[0].getLocalPort();
+
+			//warn if more is found
+			if (connectors.length > 1) {
+				List<Integer> ports = new LinkedList<Integer>();
+				for (Connector connector : connectors) {
+					ports.add(connector.getLocalPort());
+				}
+				log.info("Multile connectors configured. Ports " + ports);
+			}
+			return port;
+		}
+	*/
 	/**
 	 * WebAppContext initialization exceptions are swallowed.
 	 * 

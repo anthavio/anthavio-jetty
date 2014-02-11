@@ -1,7 +1,9 @@
 package net.anthavio.jetty.junit;
 
 import net.anthavio.jetty.test.JettyConfig;
+import net.anthavio.jetty.test.JettyPort;
 
+import org.fest.assertions.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,7 +24,7 @@ public class JUnitTest {
 
 	@Test
 	public void test() {
-		//System.out.println("xxxxxxxxxxxxxyyyyy");
+		Assertions.assertThat(port).isGreaterThan(0);//FIXME does not work yet!
+		System.out.println("Jetty6ClassRunner " + port);
 	}
-
 }

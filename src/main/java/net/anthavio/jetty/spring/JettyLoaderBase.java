@@ -31,11 +31,12 @@ public abstract class JettyLoaderBase extends ContextRefLoader {
 	@Override
 	public String[] processLocations(Class<?> testClass, String... locations) {
 
-		JettyConfig[] jettyConfigs = getJettyConfigs(testClass);
-
-		for (JettyConfig item : jettyConfigs) {
-			ServerSetupData jettyId = new ServerSetupData(item.home(), item.port(), item.configs(), item.cache());
-			getInstanceManager().startServer(jettyId);
+		JettyConfig[] configs = getJettyConfigs(testClass);
+		ServerSetupData[] serverSetups = new ServerSetupData[configs.length];
+		for (int i = 0; i < configs.length; ++i) {
+			JettyConfig config = configs[i];
+			serverSetups[i] = new ServerSetupData(config.home(), config.port(), config.configs(), config.cache());
+			getInstanceManager().startServer(serverSetups[i]);
 		}
 		if (locations.length == 0) {
 			//no spring context locations -> jetty start only
@@ -64,6 +65,16 @@ public abstract class JettyLoaderBase extends ContextRefLoader {
 			AbstractApplicationContext context = (AbstractApplicationContext) reference.getFactory();
 			return context;
 		}
+	}
+
+	public static ServerSetupData[] getServerSetups(Class<?> testClass) {
+		JettyConfig[] jettyConfigs = getJettyConfigs(testClass);
+		ServerSetupData[] serverSetups = new ServerSetupData[jettyConfigs.length];
+		for (int i = 0; i < jettyConfigs.length; ++i) {
+			JettyConfig config = jettyConfigs[i];
+			serverSetups[i] = new ServerSetupData(config.home(), config.port(), config.configs(), config.cache());
+		}
+		return serverSetups;
 	}
 
 	public static JettyConfig[] getJettyConfigs(Class<?> testClass) {
